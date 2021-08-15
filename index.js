@@ -591,7 +591,44 @@ client.on('message', async(message) => {
     })
 
 })
+const { Client, Collection } = require('discord.js');
 
+const cfg = require('./config.json')
+client.commands = new Collection();
+const fs = require('fs')
+fs.readdir("./commands/", (err, files) => {
+  if (err) return console.error(err);
+  files.forEach(file => {
+    if (!file.endsWith(".js")) return;
+    // Load the command file itself
+    let props = require(`./commands/${file}`);
+    // Get just the command name from the file name
+    let commandName = file.split(".")[0];
+    console.log(`Attempting to load command ${commandName}`);
+    // Here we simply store the whole thing in the command Enmap. We're not running it right now.
+    client.commands.set(commandName, props);
+  });
+});
+
+client.once('ready', () => {
+    console.log('FENIX BOT ONLINE');  
+});
+
+client.on('message', async message => {
+    if (message.author.bot) return;
+    if (!message.guild) return;
+    const prefix = cfg.prefix;
+
+    if (message.content.indexOf(prefix) !== 0) return;
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
+
+    const cmd = client.commands.get(command);
+
+    if (!cmd) return;
+
+    cmd.run(client, message, args);
+});
 
 
 
