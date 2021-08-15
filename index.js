@@ -636,4 +636,4 @@ client.on('message', async message => {
 
 
 keepAlive();
-client.login('ODE1MzQyOTA4NTAwNzM4MDQ5.YDrBQQ.ek0H_rjn1X8T-CESmbnmzRfY-CA').catch(err => console.log(`Invalid Token Provided!`))
+client.login('').catch(err => console.log(`Invalid Token Provided!`))
